@@ -4,7 +4,7 @@ import rbk.Match
 import org.joda.time._
 import org.joda.time.DateTimeFieldType._
 
-class VCalendar(assignedMatches:List[Match]) {
+class VCalendar(assignedMatches: List[Match]) {
 
   val thisHour = LocalDateTime.now.withMillisOfSecond(0).withSecondOfMinute(0).withMinuteOfHour(0)
 
@@ -13,10 +13,10 @@ class VCalendar(assignedMatches:List[Match]) {
   private val calendarFormatString = "yyyyMMdd'T'HHmmss'Z"
 
   def feed = {
-    assignedMatches.foldLeft(start)(_+"\n" + vevent(_)) + "\n"+end
+    assignedMatches.foldLeft(start)(_ + "\n" + vevent(_)) + "\n" + end
   }
 
-  private def vevent(m:Match) = {
+  private def vevent(m: Match) = {
     val start = toUTC(m.date)
     val desc = """Kamp:  %s\nTurnering: %s""".format(m.teams, m.tournament)
     """BEGIN:VEVENT
@@ -29,25 +29,24 @@ class VCalendar(assignedMatches:List[Match]) {
     |SUMMARY:%s
     |DESCRIPTION:%s
     |END:VEVENT""".stripMargin.format(
-                start.toString(calendarFormatString),
-                start.plusHours(2).toString(calendarFormatString),
-                toUTC(thisHour).toString(calendarFormatString),
-                toUTC(thisHour).toString(calendarFormatString),
-                m.teams+"@fiks.herokuapp.com",
-                m.tv,
-                m.teams,
-                desc
-    )
+      start.toString(calendarFormatString),
+      start.plusHours(2).toString(calendarFormatString),
+      toUTC(thisHour).toString(calendarFormatString),
+      toUTC(thisHour).toString(calendarFormatString),
+      m.teams.replaceAll(" ", "_") + "_" + m.tournament.replaceAll(" ", "_") + "_" + m.date.getYear() + "@rosenborgkalender.herokuapp.com",
+      m.tv,
+      m.teams,
+      desc)
   }
 
   val start =
     """BEGIN:VCALENDAR
     |VERSION:2.0
-    |PRODID:-//dommerfiks/kampoppsett//NONSGML v1.0//EN
+    |PRODID:-//rosenborgkalender/kamper//NONSGML v1.0//EN
     |METHOD:PUBLISH
-    |X-WR-CALNAME:Dommer-FIKS
-    |X-WR-CALDESC:Dommer-FIKS
-    |X-PUBLISHED-TTL:PT1H""".stripMargin
+    |X-WR-CALNAME:Rosenborgkalender
+    |X-WR-CALDESC:Rosenborgkalender
+    |X-PUBLISHED-TTL:PT24H""".stripMargin
 
   val end = "END:VCALENDAR"
 
