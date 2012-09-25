@@ -4,4 +4,6 @@ bin
 .settings/
 .project
 .*
-project/boot/
+project/boot
+project/target
+project/plugins/target
