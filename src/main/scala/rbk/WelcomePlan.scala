@@ -10,9 +10,8 @@ class WelcomePlan(val matchCache: MatchCache) extends Plan {
   def intent = {
     case GET(Path(Seg(Nil))) => Ok ~> Html5(<h1>Hei sveis</h1>)
     case GET(Path(Seg("matches" :: Nil))) => Ok ~> Html5(matchTable)
-    case GET(Path(Seg("calendar" :: Nil))) => Ok ~> CharContentType("text/calendar") ~> ResponseString(new VCalendar(matchCache.matchesFor("2012")).feed)
-    case GET(Path(Seg("calendarPreview" :: Nil))) => Ok ~> CharContentType("text/plain") ~> ResponseString(new VCalendar(matchCache.matchesFor("2012")).feed)
-
+    case GET(Path(Seg("calendar" :: Nil))) => Ok ~> CharContentType("text/calendar") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor("2012")).feed)
+    case GET(Path(Seg("calendarPreview" :: Nil))) => Ok ~> CharContentType("text/plain") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor("2012")).feed)
   }
 
   def matchTable = {

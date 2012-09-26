@@ -3,6 +3,7 @@ package rbk
 import com.google.common.cache.{CacheBuilder, CacheLoader}
 import java.util.concurrent.TimeUnit
 import Scala2GuavaConversions.scalaFunction2GuavaFunction
+import org.joda.time.LocalDateTime
 
 class MatchCache(val matchscraper: MatchScraper) {
 
@@ -13,6 +14,10 @@ class MatchCache(val matchscraper: MatchScraper) {
 
   def matchesFor(year:String): List[Match] = {
     cache.get(year)
+  }
+  
+  def upcomingMatchesFor(year: String) = {
+    matchesFor(year).filter(_.date.isAfter(LocalDateTime.now))
   }
 }
 

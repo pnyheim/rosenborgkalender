@@ -16,19 +16,24 @@ class MatchScraper {
     
     val upcomingMatchesWithTimeDefined = allRows.filter {
       el: Element => el.children().first().getElementsByClass("clsOppsettTableCell").size() != 0
-    }.filter {
-      el: Element => el.child(4).text.contains(":")
+//    }.filter {
+//      el: Element => el.child(4).text.contains(":")
     }.map {
       el: Element =>
 
         Match(
           el.child(0).text,
           el.child(1).text,
-          dateTimeFormat.parseLocalDateTime(el.child(3).text + "-" + el.child(4).text),
+          parseTime(el.child(3).text,el.child(4).text),
           el.child(4).text,
           el.child(5).text)
     }
     upcomingMatchesWithTimeDefined.toList
   }
 
+  def parseTime(date:String, time:String) = {
+    var theTime = "23:59" 
+    if (time.contains(":")) theTime = time
+    dateTimeFormat.parseLocalDateTime(date + "-" + theTime)
+  }
 }
