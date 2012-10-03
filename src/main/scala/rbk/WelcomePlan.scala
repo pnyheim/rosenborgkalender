@@ -43,10 +43,10 @@ class WelcomePlan(val matchCache: MatchCache) extends Plan {
 
   def redirect = {
     <head>
-      <meta http-equiv="refresh" content="0;URL='/calendar.ics'"/>
       {
         googleAnalytics
       }
+      <meta http-equiv="refresh" content="0;URL='/calendar.ics'"/>
     </head>
     <h1>Rosenborg Kalender</h1>
       <p>Last ned her: <a href="/calendar.ics">calendar.ics</a></p>
