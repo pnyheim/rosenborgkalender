@@ -28,6 +28,7 @@ class WelcomePlan(val matchCache: MatchCache) extends Plan {
       }
     </head>
     <h1>Rosenborg kamper</h1>
+    <p>Kalenderfeed for rosenborg kamper: <a href="/calendar">calendar</a></p>
     <table>
       {
         matchList.map(s => <tr><td>{ s.toString() }</td></tr>)
