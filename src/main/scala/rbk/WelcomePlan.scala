@@ -11,24 +11,30 @@ import unfiltered.response.Found
 import unfiltered.response.Location
 import unfiltered.response.SeeOther
 import unfiltered.response.TemporaryRedirect
+import unfiltered.response.MovedPermanently
 class WelcomePlan(val matchCache: MatchCache) extends Plan {
   def intent = {
     case GET(Path(Seg(Nil))) => Found ~> Location("/matches")
-    case GET(Path(Seg("matches" :: Nil))) => Ok ~> Html5(matchTable)
-    case GET(Path(Seg("calendar.ics" :: Nil))) => Ok ~> CharContentType("text/calendar") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor("2012")).feed)
-    case GET(Path(Seg("calendarPreview" :: Nil))) => Ok ~> CharContentType("text/plain") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor("2012")).feed)
+    case GET(Path(Seg("matches" :: Nil))) => MovedPermanently ~> Location("/matches/2012")
+    case GET(Path(Seg("matches" ::year :: Nil))) => Ok ~> Html5(matchTable(year))
     case GET(Path(Seg("calendar" :: Nil))) => Ok ~> Html5(redirect)
+    case GET(Path(Seg("calendar" ::year :: Nil))) => Ok ~> CharContentType("text/calendar") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor(year)).feed)
+
+    case GET(Path(Seg("calendar.ics" :: Nil))) => MovedPermanently ~> Location("/calendar/2012")
+    case GET(Path(Seg("calendarPreview":: year :: Nil))) => Ok ~> CharContentType("text/plain") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor(year)).feed)
+    case GET(Path(Seg("calendarPreview" :: Nil))) => MovedPermanently ~> Location("/calendarPreview/2012")
   }
 
-  def matchTable = {
-    val matchList = matchCache.matchesFor("2012")
+  def matchTable(year: String) = {
+	  val calYear = "/calendar/"+year
+    val matchList = matchCache.matchesFor(year)
     <head>
       {
         googleAnalytics
       }
     </head>
     <h1>Rosenborg kamper</h1>
-    <p>Kalenderfeed for rosenborg kamper: <a href="/calendar">calendar</a></p>
+    <p>Kalenderfeed for rosenborg kamper: <a href={ calYear }>{ calYear }</a></p>
     <table>
       {
         matchList.map(s => <tr><td>{ s.toString() }</td></tr>)
@@ -46,10 +52,10 @@ class WelcomePlan(val matchCache: MatchCache) extends Plan {
       {
         googleAnalytics
       }
-      <meta http-equiv="refresh" content="0;URL='/calendar.ics'"/>
+      <meta http-equiv="refresh" content="0;URL='/calendar/2012'"/>
     </head>
     <h1>Rosenborg Kalender</h1>
-      <p>Last ned her: <a href="/calendar.ics">calendar.ics</a></p>
+      <p>Last ned her: <a href="/calendar/2012">calendar/2012</a></p>
       <p>Denne siden vil automatisk laste ned kalenderen</p>
   }
 

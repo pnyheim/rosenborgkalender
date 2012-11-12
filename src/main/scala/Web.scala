@@ -13,8 +13,7 @@ object Web {
     println("Starting on port:" + port)
     val http = jetty.Http(port)
     http.resources(getClass().getResource("/static"))
-      .plan(new WelcomePlan(matchCache))
-    .run
+      .plan(new WelcomePlan(matchCache)).run()
   }
 
 }
