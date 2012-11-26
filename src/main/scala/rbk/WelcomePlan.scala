@@ -12,19 +12,25 @@ import unfiltered.response.Location
 import unfiltered.response.SeeOther
 import unfiltered.response.TemporaryRedirect
 import unfiltered.response.MovedPermanently
+import org.joda.time.LocalDate
+import unfiltered.response.Redirect
 class WelcomePlan(val matchCache: MatchCache) extends Plan {
   def intent = {
     case GET(Path(Seg(Nil))) => Found ~> Location("/matches")
-    case GET(Path(Seg("matches" :: Nil))) => MovedPermanently ~> Location("/matches/2012")
+    case GET(Path(Seg("matches" :: Nil))) => Found ~> Location("/matches/" + currentYear)
     case GET(Path(Seg("matches" ::year :: Nil))) => Ok ~> Html5(matchTable(year))
     case GET(Path(Seg("calendar" :: Nil))) => Ok ~> Html5(redirect)
     case GET(Path(Seg("calendar" ::year :: Nil))) => Ok ~> CharContentType("text/calendar") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor(year)).feed)
 
-    case GET(Path(Seg("calendar.ics" :: Nil))) => MovedPermanently ~> Location("/calendar/2012")
+    case GET(Path(Seg("calendar.ics" :: Nil))) => Found ~> Location("/calendar/"+currentYear)
     case GET(Path(Seg("calendarPreview":: year :: Nil))) => Ok ~> CharContentType("text/plain") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor(year)).feed)
-    case GET(Path(Seg("calendarPreview" :: Nil))) => MovedPermanently ~> Location("/calendarPreview/2012")
+    case GET(Path(Seg("calendarPreview" :: Nil))) => Found ~> Location("/calendarPreview/" + currentYear)
   }
 
+  def currentYear = {
+    LocalDate.now().getYear()
+  }
+  
   def matchTable(year: String) = {
 	  val calYear = "/calendar/"+year
     val matchList = matchCache.matchesFor(year)
@@ -52,10 +58,10 @@ class WelcomePlan(val matchCache: MatchCache) extends Plan {
       {
         googleAnalytics
       }
-      <meta http-equiv="refresh" content="0;URL='/calendar/2012'"/>
+      <meta http-equiv="refresh" content="0;URL='/calendar.ics'"/>
     </head>
     <h1>Rosenborg Kalender</h1>
-      <p>Last ned her: <a href="/calendar/2012">calendar/2012</a></p>
+      <p>Last ned her: <a href="/calendar.ics">calendar.ics</a></p>
       <p>Denne siden vil automatisk laste ned kalenderen</p>
   }
 
