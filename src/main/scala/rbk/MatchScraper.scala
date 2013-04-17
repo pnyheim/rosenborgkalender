@@ -10,7 +10,7 @@ class MatchScraper {
   val dateTimeFormat = DateTimeFormat.forPattern("dd.MM.yyyy-HH:mm")
 
   def scrapeMatches(year: String): List[Match] = {
-    val matchesResponse = Jsoup.connect("http://www.sponsorweb.no/terminliste.aspx?y=" + year)
+    val matchesResponse = Jsoup.connect("http://godfoten.rbk.no/terminliste.aspx?y=" + year)
     .method(Method.GET).timeout(25000).followRedirects(false).execute()
 
     val allRows = matchesResponse.parse.select("table#tblInfo > tbody > tr").listIterator.asScala
