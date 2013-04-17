@@ -33,7 +33,7 @@ class MatchScraper {
   }
 
   def parseTime(date:String, time:String) = {
-    var theTime = "23:59" 
+    var theTime = "00:00"
     if (time.contains(":")) theTime = time
     dateTimeFormat.parseLocalDateTime(date + "-" + theTime)
   }

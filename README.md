@@ -8,7 +8,7 @@ It does this by using jsoup to scrape the match table at http://www.rbk.no/fixtu
 This link can easily be added to e.g. Gmail calendar and will add events to it and update them automatically
 
 ## Conventions
-Some matches do not yet have a starting time (the table at rbk.no says "Kommer") - in these cases, I schedule the match at 23:59 that day - and when I look at a match that starts 23:59, I know that is wrong and that the starttime is not yet known
+Some matches do not yet have a starting time (the table at rbk.no says "Kommer") - in these cases, I schedule the match at midnight that day - and when I look at a match that starts 00:00, I know that is wrong and that the starttime is not yet known
 The match table will be cached for 24 hours, and the calendar feed has X-PUBLISHED-TTL set to 24H
 
 ## Heroku
