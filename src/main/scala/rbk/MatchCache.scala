@@ -17,7 +17,7 @@ class MatchCache(val matchscraper: MatchScraper) {
   }
   
   def upcomingMatchesFor(year: String) = {
-    matchesFor(year).filter(_.date.isAfter(LocalDateTime.now))
+    matchesFor(year).filter(_.date.isAfter(LocalDateTime.now)).take(1)
   }
 }
 
