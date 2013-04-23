@@ -20,12 +20,14 @@ class WelcomePlan(val matchCache: MatchCache) extends Plan {
     case GET(Path(Seg("matches" :: Nil))) => Found ~> Location("/matches/" + currentYear)
     case GET(Path(Seg("matches" ::year :: Nil))) => Ok ~> Html5(matchTable(year))
     case GET(Path(Seg("calendar" :: Nil))) => Ok ~> Html5(redirect)
-    case GET(Path(Seg("calendar" ::year :: "calendar.ics" :: Nil))) => Ok ~> CharContentType("text/calendar") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor(year)).feed)
-    case GET(Path(Seg("calendar" ::year :: number :: "calendar.ics" :: Nil))) => Ok ~> CharContentType("text/calendar") ~> ResponseString(new VCalendar(matchCache.upcomingNMatchesFor(year, Integer.valueOf(number))).feed)
     case GET(Path(Seg("calendar.ics" :: Nil))) => Found ~> Location("/calendar/"+currentYear+"/calendar.ics")
+    case GET(Path(Seg("calendar" ::year :: Nil))) => Found ~> Location("/calendar/"+year+"/calendar.ics")
+    case GET(Path(Seg("calendar" ::year :: "calendar.ics" :: Nil))) => Ok ~> CharContentType("text/calendar") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor(year)).feed)
+    case GET(Path(Seg("calendar" ::year :: number :: Nil))) => Found ~> Location("/calendar/"+year+"/" + number + "/calendar.ics")
+    case GET(Path(Seg("calendar" ::year :: number :: "calendar.ics" :: Nil))) => Ok ~> CharContentType("text/calendar") ~> ResponseString(new VCalendar(matchCache.upcomingNMatchesFor(year, Integer.valueOf(number))).feed)
+    case GET(Path(Seg("calendarPreview" :: Nil))) => Found ~> Location("/calendarPreview/" + currentYear)
     case GET(Path(Seg("calendarPreview":: year :: Nil))) => Ok ~> CharContentType("text/plain") ~> ResponseString(new VCalendar(matchCache.upcomingMatchesFor(year)).feed)
     case GET(Path(Seg("calendarPreview":: year :: number :: Nil))) => Ok ~> CharContentType("text/plain") ~> ResponseString(new VCalendar(matchCache.upcomingNMatchesFor(year,Integer.valueOf(number))).feed)
-    case GET(Path(Seg("calendarPreview" :: Nil))) => Found ~> Location("/calendarPreview/" + currentYear)
   }
 
   def currentYear = {
