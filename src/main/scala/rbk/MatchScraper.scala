@@ -17,8 +17,8 @@ class MatchScraper {
     
     val upcomingMatchesWithTimeDefined = allRows.filter {
       el => el.children().first().getElementsByClass("clsOppsettTableCell").size() != 0
-//    }.filter {
-//      el: Element => el.child(4).text.contains(":")
+    }.filter {
+      el: Element => !el.child(3).text.isEmpty()
     }.map {
       el =>
 
